@@ -14,16 +14,16 @@
 
       $title.attr({
         'data-position': 'top',
-        'data-tooltip': movie.title
+        'data-tooltip': movie.Title
       });
 
-      $title.tooltip({ delay: 50 }).text(movie.title);
+      $title.tooltip({ delay: 50 }).text(movie.Title);
 
       const $poster = $('<img>').addClass('poster');
 
       $poster.attr({
-        src: movie.poster,
-        alt: `${movie.poster} Poster`
+        src: movie.Poster,
+        alt: `${movie.Poster} Poster`
       });
 
       $content.append($title, $poster);
@@ -33,17 +33,17 @@
       const $plot = $('<a>');
 
       $plot.addClass('waves-effect waves-light btn modal-trigger');
-      $plot.attr('href', `#${movie.id}`);
+      $plot.attr('href', `#${movie.imdbID}`);
       $plot.text('Plot Synopsis');
 
       $action.append($plot);
       $card.append($action);
 
-      const $modal = $('<div>').addClass('modal').attr('id', movie.id);
+      const $modal = $('<div>').addClass('modal').attr('id', movie.imdbID);
       const $modalContent = $('<div>').addClass('modal-content');
-      const $modalHeader = $('<h4>').text(movie.title);
-      const $movieYear = $('<h6>').text(`Released in ${movie.year}`);
-      const $modalText = $('<p>').text(movie.plot);
+      const $modalHeader = $('<h4>').text(movie.Title);
+      const $movieYear = $('<h6>').text(`Released in ${movie.Year}`);
+      const $modalText = $('<p>').text(movie.Plot);
 
       $modalContent.append($modalHeader, $movieYear, $modalText);
       $modal.append($modalContent);
@@ -57,4 +57,24 @@
   };
 
   // ADD YOUR CODE HERE
+
+  let searchButton = document.getElementById('searchButton');
+  let search = document.getElementById('search');
+  searchButton.addEventListener('click', function(event) {
+    if (search.value != '') {
+      event.preventDefault();
+      fetch(`http://www.omdbapi.com/?apikey=9b54260a&s=${search.value}`)
+        .then((responce) => responce.json())
+        .then((data) => {
+          for (let i = 0; i < data.Search.length; i++) {
+            let movie = data.Search[i];
+            movies.push(movie);
+          }
+          console.log(movies);
+          renderMovies();
+        })
+    }
+  })
+
+
 })();
